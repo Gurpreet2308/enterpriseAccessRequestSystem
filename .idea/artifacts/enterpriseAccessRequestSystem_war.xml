@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="enterpriseAccessRequestSystem:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>enterpriseAccessRequestSystem</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="enterpriseAccessRequestSystem-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="enterpriseAccessRequestSystem:war exploded" />
+    </root>
+  </artifact>
+</component>
