@@ -16,8 +16,8 @@ public class CreateEmployee extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
-            ArrayList<String> allDept = new ArrayList<String>(ApplicationExecution.getAllDept());
-            ArrayList<String> allRole = new ArrayList<String>(ApplicationExecution.getAllRoles());
+            ArrayList<String> allDept = new ArrayList<>(ApplicationExecution.getAllDept());
+            ArrayList<String> allRole = new ArrayList<>(ApplicationExecution.getAllRoles());
 
             request.setAttribute("allDept",allDept);
             request.setAttribute("allRole",allRole);
@@ -40,9 +40,14 @@ public class CreateEmployee extends HttpServlet {
             empRole.setRoles(new ArrayList<>(Collections.singletonList(request.getParameter("role"))));
             empDept.setDeptName(request.getParameter("dept"));
 
-            boolean success = ApplicationExecution.createEmployee(emp, empRole, empDept);
-            if(success){
-                response.sendRedirect("home-page");
+            String empUsername = ApplicationExecution.createEmployee(emp, empRole, empDept);
+            if(!empUsername.isEmpty() && empUsername!=null){//!empUsername.isEmpty() && empUsername!=null
+                emp.setEmpUserName(empUsername);
+                HttpSession session = request.getSession();
+                session.setAttribute("newCreatedEmp", emp);
+                session.setAttribute("newCreatedEmpRole", empRole);
+                session.setAttribute("newCreatedEmpDept", empDept);
+                response.sendRedirect("show-employee-detail");
             }
         }catch(Exception e){}
     }

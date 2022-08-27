@@ -117,26 +117,26 @@ public class ApplicationExecution {
         return null;
     }
 
-    public static boolean createEmployee(Employee emp, EmployeeRole empRole, EmployeeDepartment empDept){
+    public static String createEmployee(Employee emp, EmployeeRole empRole, EmployeeDepartment empDept){
         if(emp!=null && empRole!=null){
             emp.setEmpUserName(generateEmpUserName(emp.getEmpFirstName(), emp.getEmpLastName()));
             emp.setEmpId(DatabaseExecution.createEmployee(emp).getEmpId());
             if(emp.getEmpId()!=0){
                 if(createEmployeeRole(emp, empRole)){
                     if(createEmployeeDepartment(emp, empDept)){
-                        return true;
+                        return emp.getEmpUserName();
                     }
                 }
             }
         }
         else{ System.out.println("-- no data found for new employee");}
-        return  false;
+        return null;
     }
 
     private static String generateEmpUserName(String fname, String lname){
         String first = fname.toLowerCase();
         String last = lname.toLowerCase();
-        return  first + lname.charAt(0) + "123";
+        return  first + last.charAt(0) + "123";
     }
 
     private static boolean createEmployeeRole(Employee emp, EmployeeRole empRole){
@@ -149,8 +149,7 @@ public class ApplicationExecution {
         empRole.setEmpRolePassword(hashPwd);
         if(DatabaseExecution.addEmployeeRole(empRole)){
             return true;
-        }
-        return false;
+        } return false;
     }
 
     private static boolean createEmployeeDepartment(Employee emp, EmployeeDepartment empDept){
@@ -160,15 +159,14 @@ public class ApplicationExecution {
         empDept.setDeptId(DatabaseExecution.getDeptIdFromName(empDept.getDeptName()));
         if(DatabaseExecution.createEmployeeDepartment(empDept)){
             return true;
-        }
-        return false;
+        } return false;
     }
 
     private static String encryptPassword(String plainPwd){
         if(!plainPwd.isEmpty() && plainPwd!=null){
             String cipherPwd = BCrypt.withDefaults().hashToString(12, plainPwd.toCharArray());
             return cipherPwd;
-        }return null;
+        } return null;
     }
 
     public static boolean setLoginAuditEntry(Employee emp, EmployeeRole empRole){
@@ -182,6 +180,27 @@ public class ApplicationExecution {
             if(DatabaseExecution.setLoginAuditEntry(loginAud)){
                 return true;
             }
-        }return false;
+        } return false;
     }
+/*
+    public static Employee getLatestEmployee(){
+        Employee emp = DatabaseExecution.getLatestEmployee();
+        if(emp!=null){
+            return emp;
+        } return null;
+    }
+
+    public static EmployeeRole getEmpRoleDetails (Employee emp){
+        EmployeeRole empRole = DatabaseExecution.getEmpRoleDetails(emp);
+        if(empRole!=null){
+            return empRole;
+        } return null;
+    }
+
+    public static EmployeeDepartment getEmpDeptDetails (Employee emp){
+        EmployeeDepartment empDept = DatabaseExecution.getEmpDeptDetails(emp);
+        if(empDept!=null){
+            return empDept;
+        } return null;
+    }*/
 }

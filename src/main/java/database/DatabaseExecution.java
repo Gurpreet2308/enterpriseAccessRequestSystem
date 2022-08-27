@@ -309,7 +309,7 @@ public class DatabaseExecution {
                 stmnt.setString(2,null);
             }
             else{
-                stmnt.setDate(2,new Date(empRole.getRoleEndDate().getTime()));
+                stmnt.setTimestamp(2,empRole.getRoleEndDate());
                 //stmnt.setDate(2,new Date(endDate.getTime()));
             }
             stmnt.setString(3,empRole.getEmpRolePassword());//stmnt.setString(3,empPwd);
@@ -465,5 +465,72 @@ public class DatabaseExecution {
         }catch (Exception e){}
         return false;
     }
+/*
+    public static Employee getLatestEmployee(){
+        Employee emp = null;
+        try{
+            if(getDBConnection()){
+                String query = "select * from employee where emp_id = (select top 1 emp_id from employee_role ORDER by role_start_date DESC)";
+                stmnt = conn.prepareStatement(query);
+                ResultSet result = stmnt.executeQuery();
+                while(result.next()){
+                    int id = result.getInt(0);
+                    //emp.setEmpUserName(result.getString("emp_user_name"));
+                    emp.setEmpId(Long.valueOf(result.getInt(0)));
+                    emp.setEmpFirstName(result.getString("emp_first_name"));
+                    emp.setEmpLastName(result.getString("emp_last_name"));
+                    emp.setEmpEmailAddress(result.getString("emp_email_address"));
+                    emp.setEmpPhoneNo(result.getString("emp_phone_no"));
+                }
+            }
+        }catch (Exception e){}
+        return emp;
+    }
+
+    public static EmployeeRole getEmpRoleDetails(Employee emp){
+        EmployeeRole empRole = null;
+        try{
+            if(getDBConnection()){
+                String query = "select * from employee_role where emp_id = ? and role_end_date is null";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setInt(1,(int)emp.getEmpId());
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        empRole.setRoleId(result.getInt("role_id"));
+                        empRole.setRoleEndDate(result.getTimestamp("role_end_date"));
+                        empRole.setRoleStartDate(result.getTimestamp("role_start_date"));
+                        empRole.setRoleId(result.getInt("role_id"));
+                        empRole.setEmpId(result.getInt("emp_id"));
+                    }
+                }
+            }
+            conn.close();
+        }catch(Exception e){}
+        return empRole;
+    }
+
+    public static EmployeeDepartment getEmpDeptDetails(Employee emp){
+        EmployeeDepartment empDept = null;
+        try{
+            if(getDBConnection()){
+                String query = "select * from employee_department where emp_id = ? and dept_end_date is null";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setInt(1,(int)emp.getEmpId());
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        empDept.setDeptId(result.getInt("dept_id"));
+                        empDept.setDeptEndDate(result.getTimestamp("dept_end_date"));
+                        empDept.setDeptStartDate(result.getTimestamp("dept_start_date"));
+                        empDept.setEmpId(Long.valueOf(result.getInt("emp_id")));
+                        empDept.setDeptName(result.getString("dept_name"));
+                    }
+                }
+            }
+            conn.close();
+        }catch(Exception e){}
+        return empDept;
+    }*/
 }
 

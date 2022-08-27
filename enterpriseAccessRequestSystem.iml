@@ -35,7 +35,11 @@
           <root url="jar://E:/work-study/study/UoG/MScProject/sqljdbc.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://E:/work-study/study/UoG/MScProject/sqljdbc.jar!/" />
+          <root url="jar://E:/work-study/study/UoG/MScProject/sqljdbc.jar!/" />
+          <root url="jar://E:/work-study/study/UoG/MScProject/sqljdbc_10.2/enu/mssql-jdbc-10.2.1.jre8.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
