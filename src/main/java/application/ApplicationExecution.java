@@ -2,6 +2,8 @@ package application;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import database.*;
+
+import javax.xml.crypto.Data;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -181,6 +183,19 @@ public class ApplicationExecution {
                 return true;
             }
         } return false;
+    }
+
+    public static boolean updateLoginEntry(Employee emp, EmployeeRole empRole){
+        if(emp!=null && empRole!=null){
+            LoginAudit loginAud = new LoginAudit();
+            loginAud.setEmpId(emp.getEmpId());
+            loginAud.setRoleId(empRole.getRoleId());
+            loginAud.setAuditId(DatabaseExecution.getLatestLoginAudit(loginAud).getAuditId());
+            loginAud.setLogoffTime(new Timestamp(System.currentTimeMillis()));
+            if(DatabaseExecution.updateLoginAuditEntry(loginAud)){
+                return true;
+            }
+        }return false;
     }
 /*
     public static Employee getLatestEmployee(){

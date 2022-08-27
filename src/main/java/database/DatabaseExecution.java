@@ -457,10 +457,44 @@ public class DatabaseExecution {
                 stmnt.setInt(1,(int)loginAud.getEmpId());
                 stmnt.setInt(2,(int)loginAud.getRoleId());
                 stmnt.setTimestamp(3,loginAud.getLoginTime()); //stmnt.setDate(3, new Date(loginAud.getLoginTime().getTime()));
-                stmnt.setDate(4,null);
+                stmnt.setTimestamp(4,null);
                 stmnt.setInt(5,0);
                 int result = stmnt.executeUpdate();
                 if(result>0){ return true; }
+            }
+        }catch (Exception e){}
+        return false;
+    }
+
+    public static LoginAudit getLatestLoginAudit(LoginAudit loginAudit){
+        try{
+            if(getDBConnection()){
+                String query = "select top 1 * from login_audit WHERE emp_id = ? and role_id = ? order by login_time DESC";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setInt(1,(int)loginAudit.getEmpId());
+                stmnt.setInt(2,(int)loginAudit.getRoleId());
+
+                ResultSet result = stmnt.executeQuery();
+                while(result.next()){
+                    int id = result.getInt("audit_id");
+                    loginAudit.setAuditId(id);
+                }
+            }
+        }catch (Exception e){}
+        return loginAudit;
+    }
+    public static boolean updateLoginAuditEntry(LoginAudit loginAudit){
+        try{
+            if(getDBConnection()){
+                String query = "UPDATE login_audit set logoff_time = ? WHERE audit_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setTimestamp(1,loginAudit.getLogoffTime());
+                stmnt.setInt(2, (int)loginAudit.getAuditId());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    return true;
+                }
             }
         }catch (Exception e){}
         return false;

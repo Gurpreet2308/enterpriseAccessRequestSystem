@@ -14,17 +14,24 @@
 </head>
 <body>
 <div style="width: 100%; height: 25%">
-    <div style="width: 100%; height: 100%; margin-left: 40px; margin-top: 30px">
+    <div style="width: 90%; height: 100%; margin-left: 40px; margin-top: 30px">
         <h3>Welcome ${employee.getEmpFirstName()}!</h3>
         <h4>Working as: ${employeeRole.getRoles().get(0)}</h4>
     </div>
 </div>
-<div style="width: 100%; height: 75%">
+<div style="width: 100%; height: 55%">
     <div align="center" >
         <form action="home-page" method="post">
             <c:forEach begin="0" end="${buttons.size()-1}" var="i">
                 <input type="submit" value="${buttons.get(i)}" name="buttonClicked" style="padding: 10px;margin: 10px">
             </c:forEach>
+        </form>
+    </div>
+</div>
+<div style="height: 20%; width: 100%">
+    <div align="center">
+        <form action="logoff-page" method="get">
+            <input type="submit" value="LogOff" style="padding: 10px;margin: 10px">
         </form>
     </div>
 </div>
