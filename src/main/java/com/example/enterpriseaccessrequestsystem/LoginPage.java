@@ -38,6 +38,7 @@ public class LoginPage extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("loggedEmployee", loginEmp);
                 session.setAttribute("loggedEmployeeRole", loginEmpRole);
+                session.setAttribute("taskExecuted", 0);
                 //session.setMaxInactiveInterval(60*30);//session timeout for 30 minutes
 
                 ApplicationExecution.setLoginAuditEntry(loginEmp,loginEmpRole);

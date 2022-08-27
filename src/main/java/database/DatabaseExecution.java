@@ -304,7 +304,7 @@ public class DatabaseExecution {
         try{
             String query = "INSERT into employee_role VALUES (?,?,?,?,?)";
             stmnt = conn.prepareStatement(query);
-            stmnt.setDate(1,new Date(empRole.getRoleStartDate().getTime()));//stmnt.setDate(1,new Date(startDate.getTime()));
+            stmnt.setTimestamp(1,empRole.getRoleStartDate());//stmnt.setDate(1,new Date(startDate.getTime()));
             if(empRole.getRoleEndDate()==null){
                 stmnt.setString(2,null);
             }
@@ -486,10 +486,11 @@ public class DatabaseExecution {
     public static boolean updateLoginAuditEntry(LoginAudit loginAudit){
         try{
             if(getDBConnection()){
-                String query = "UPDATE login_audit set logoff_time = ? WHERE audit_id = ?";
+                String query = "UPDATE login_audit set logoff_time = ?, tasks_executed = ? WHERE audit_id = ?";
                 stmnt = conn.prepareStatement(query);
                 stmnt.setTimestamp(1,loginAudit.getLogoffTime());
-                stmnt.setInt(2, (int)loginAudit.getAuditId());
+                stmnt.setInt(2,(int)loginAudit.getTasksExecuted());
+                stmnt.setInt(3, (int)loginAudit.getAuditId());
 
                 int result = stmnt.executeUpdate();
                 if(result>0){
@@ -499,22 +500,31 @@ public class DatabaseExecution {
         }catch (Exception e){}
         return false;
     }
-/*
+
     public static Employee getLatestEmployee(){
-        Employee emp = null;
+        Employee emp = new Employee();
         try{
             if(getDBConnection()){
-                String query = "select * from employee where emp_id = (select top 1 emp_id from employee_role ORDER by role_start_date DESC)";
+                String query = "select * from employee where emp_id IN (select top 1 emp_id from employee_role ORDER by role_start_date DESC)";
                 stmnt = conn.prepareStatement(query);
+
                 ResultSet result = stmnt.executeQuery();
-                while(result.next()){
-                    int id = result.getInt(0);
-                    //emp.setEmpUserName(result.getString("emp_user_name"));
-                    emp.setEmpId(Long.valueOf(result.getInt(0)));
-                    emp.setEmpFirstName(result.getString("emp_first_name"));
-                    emp.setEmpLastName(result.getString("emp_last_name"));
-                    emp.setEmpEmailAddress(result.getString("emp_email_address"));
-                    emp.setEmpPhoneNo(result.getString("emp_phone_no"));
+                if(result!=null){
+                    while(result.next()){
+                        String name = result.getString("emp_first_name");
+                        String lname = result.getString("emp_last_name");
+                        String userName = result.getString("emp_user_name");
+                        String email = result.getString("emp_phone_no");
+                        String phoneNo = result.getString("emp_email_address");
+                        long id = Long.valueOf(result.getInt("emp_id"));
+
+                        emp.setEmpId(id);
+                        emp.setEmpEmailAddress(email);
+                        emp.setEmpPhoneNo(phoneNo);
+                        emp.setEmpLastName(lname);
+                        emp.setEmpFirstName(name);
+                        emp.setEmpUserName(userName);
+                    }
                 }
             }
         }catch (Exception e){}
@@ -522,7 +532,7 @@ public class DatabaseExecution {
     }
 
     public static EmployeeRole getEmpRoleDetails(Employee emp){
-        EmployeeRole empRole = null;
+        EmployeeRole empRole = new EmployeeRole();
         try{
             if(getDBConnection()){
                 String query = "select * from employee_role where emp_id = ? and role_end_date is null";
@@ -545,7 +555,7 @@ public class DatabaseExecution {
     }
 
     public static EmployeeDepartment getEmpDeptDetails(Employee emp){
-        EmployeeDepartment empDept = null;
+        EmployeeDepartment empDept = new EmployeeDepartment();
         try{
             if(getDBConnection()){
                 String query = "select * from employee_department where emp_id = ? and dept_end_date is null";
@@ -565,6 +575,24 @@ public class DatabaseExecution {
             conn.close();
         }catch(Exception e){}
         return empDept;
-    }*/
+    }
+
+    public static EmployeeDepartment getDeptNameFromId(EmployeeDepartment empDept){
+        try{
+            if(getDBConnection()){
+                String query = "select * from department where dept_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setInt(1, (int)empDept.getDeptId());
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        empDept.setDeptName(result.getString("dept_name"));
+                    }
+                }
+            }
+        }catch(Exception e){}
+        return empDept;
+    }
 }
 

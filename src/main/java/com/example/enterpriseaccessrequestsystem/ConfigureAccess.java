@@ -50,6 +50,7 @@ public class ConfigureAccess extends HttpServlet {
             boolean success = ApplicationExecution.modifyAccessForEmployee(empName,empRole);
             System.out.println(success);
             if(success){
+                request.getSession().setAttribute("taskExecuted", (int)request.getSession().getAttribute("taskExecuted")+1);
                 response.sendRedirect("all-employee-access");
                 //back to all employee role page
             }

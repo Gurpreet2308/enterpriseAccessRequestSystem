@@ -15,8 +15,8 @@
 <body>
 <div style="width: 100%; height: 25%">
     <div style="width: 90%; height: 100%; margin-left: 40px; margin-top: 30px">
-        <h3>Welcome ${employee.getEmpFirstName()}!</h3>
-        <h4>Working as: ${employeeRole.getRoles().get(0)}</h4>
+        <h2>Welcome ${employee.getEmpFirstName()}!</h2>
+        <h3>Working as: ${employeeRole.getRoles().get(0)}</h3>
     </div>
 </div>
 <div style="width: 100%; height: 55%">
@@ -31,7 +31,7 @@
 <div style="height: 20%; width: 100%">
     <div align="center">
         <form action="logoff-page" method="get">
-            <input type="submit" value="LogOff" style="padding: 10px;margin: 10px">
+            <input type="submit" value="LogOff" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px">
         </form>
     </div>
 </div>

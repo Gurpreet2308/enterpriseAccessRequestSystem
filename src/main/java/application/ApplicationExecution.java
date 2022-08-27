@@ -5,9 +5,7 @@ import database.*;
 
 import javax.xml.crypto.Data;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ApplicationExecution {
 
@@ -185,19 +183,20 @@ public class ApplicationExecution {
         } return false;
     }
 
-    public static boolean updateLoginEntry(Employee emp, EmployeeRole empRole){
+    public static boolean updateLoginEntry(Employee emp, EmployeeRole empRole, int tasksExecuted){
         if(emp!=null && empRole!=null){
             LoginAudit loginAud = new LoginAudit();
             loginAud.setEmpId(emp.getEmpId());
             loginAud.setRoleId(empRole.getRoleId());
             loginAud.setAuditId(DatabaseExecution.getLatestLoginAudit(loginAud).getAuditId());
             loginAud.setLogoffTime(new Timestamp(System.currentTimeMillis()));
+            loginAud.setTasksExecuted(tasksExecuted);
             if(DatabaseExecution.updateLoginAuditEntry(loginAud)){
                 return true;
             }
         }return false;
     }
-/*
+
     public static Employee getLatestEmployee(){
         Employee emp = DatabaseExecution.getLatestEmployee();
         if(emp!=null){
@@ -208,6 +207,8 @@ public class ApplicationExecution {
     public static EmployeeRole getEmpRoleDetails (Employee emp){
         EmployeeRole empRole = DatabaseExecution.getEmpRoleDetails(emp);
         if(empRole!=null){
+            String role = DatabaseExecution.getRoleNameFromRoleId((int)empRole.getRoleId());
+            empRole.setRoles(new ArrayList<String>(Collections.singleton(role)));
             return empRole;
         } return null;
     }
@@ -215,7 +216,8 @@ public class ApplicationExecution {
     public static EmployeeDepartment getEmpDeptDetails (Employee emp){
         EmployeeDepartment empDept = DatabaseExecution.getEmpDeptDetails(emp);
         if(empDept!=null){
+            empDept.setDeptName(DatabaseExecution.getDeptNameFromId(empDept).getDeptName());
             return empDept;
         } return null;
-    }*/
+    }
 }

@@ -42,11 +42,7 @@ public class CreateEmployee extends HttpServlet {
 
             String empUsername = ApplicationExecution.createEmployee(emp, empRole, empDept);
             if(!empUsername.isEmpty() && empUsername!=null){//!empUsername.isEmpty() && empUsername!=null
-                emp.setEmpUserName(empUsername);
-                HttpSession session = request.getSession();
-                session.setAttribute("newCreatedEmp", emp);
-                session.setAttribute("newCreatedEmpRole", empRole);
-                session.setAttribute("newCreatedEmpDept", empDept);
+                request.getSession().setAttribute("taskExecuted", (int)request.getSession().getAttribute("taskExecuted")+1);
                 response.sendRedirect("show-employee-detail");
             }
         }catch(Exception e){}
