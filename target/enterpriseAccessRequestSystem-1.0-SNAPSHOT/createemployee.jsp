@@ -12,31 +12,38 @@
     <title>Create Employee</title>
 </head>
 <body>
-<div>
-    <h1>Create New Employee.</h1><br/>
-    <h2>Fill details below</h2><br/>
+<div style="height: 3%; width: 100%">
+    <div align="center" style="margin-left: 20px;margin-top: 25px">
+        <form action="home-page" method="get">
+            <input type="submit" value="Home Page" style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px">
+        </form>
+    </div>
+</div>
+<div align = "center" style="width: 100%; height: 97%;">
+    <h2>Create New Employee</h2>
+    <h3>Fill details below</h3><br/>
     <form action="create-employee" method="post">
-        <label id="fname">First Name</label>
-        <input type="text" name="fname" placeholder="First Name" required> <br/>
-        <label id="lname">Last Name</label>
-        <input type="text" name="lname" placeholder="Last Name" required> <br/>
-        <label id="email">Email Address</label>
-        <input type="text" name="email" placeholder="Email Address" required> <br/>
-        <label id="phoneno">Phone Number</label>
-        <input type="text" name="phoneno" placeholder="Phone Number" required> <br/>
-        <label for="role"><b>Role</b></label>
+        <label id="fname">First Name</label>&emsp;
+        <input type="text" name="fname" placeholder="First Name" required> <br/> <br/>
+        <label id="lname">Last Name</label>&emsp;
+        <input type="text" name="lname" placeholder="Last Name" required> <br/> <br/>
+        <label id="email">Email Address</label>&emsp;
+        <input type="text" name="email" placeholder="Email Address" required> <br/> <br/>
+        <label id="phoneno">Phone Number</label>&emsp;
+        <input type="text" name="phoneno" placeholder="Phone Number" required> <br/> <br/>
+        <label for="role">Role</label>&emsp;
         <select id="role" name="role">
             <c:forEach begin="0" end="${allRole.size()-1}" var="i">
                 <option>${allRole.get(i)}</option>
             </c:forEach>
         </select><br/><br/>
-        <label for="dept"><b>Department</b></label>
+        <label for="dept">Department</label>&emsp;
         <select id="dept" name="dept">
             <c:forEach begin="0" end="${allDept.size()-1}" var="i">
                 <option>${allDept.get(i)}</option>
             </c:forEach>
-        </select><br/><br/>
-        <input type="submit" value="Create">
+        </select><br/><br/><br/><br/>
+        <input type="submit" value="Create" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px">
     </form>
 </div>
 </body>

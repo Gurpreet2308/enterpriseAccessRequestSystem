@@ -31,9 +31,16 @@
 </head>
 <body>
 <div>
-    <div style="width: 100%; height: 100%">
+    <div style="height: 3%; width: 100%">
+        <div align="center" style="margin-left: 20px;margin-top: 25px">
+            <form action="home-page" method="get">
+                <input type="submit" value="Home Page" style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px">
+            </form>
+        </div>
+    </div>
+    <div style="width: 100%; height: 97%">
         <br/><br/>
-        <h1 style="text-align: center">Employees and their Access</h1>
+        <h2 style="text-align: center">Employees and their Access</h2>
         <table>
             <tr>
                 <th>Employee</th>

@@ -31,7 +31,9 @@ public class LoginPage extends HttpServlet {
                 EmployeeRole loginEmpRole = ApplicationExecution.getEmployeeLoggedInRole(userName, password);
                 loginEmp.setEmpUserName(userName);
                 String firstName = ApplicationExecution.getEmployeeFirstName(userName);
-                if(!firstName.isEmpty()){
+                String lastName = ApplicationExecution.getEmployeeLastName(userName);
+                if(!firstName.isEmpty() && !lastName.isEmpty()){
+                    loginEmp.setEmpLastName(lastName);
                     loginEmp.setEmpFirstName(firstName);
                 }
 
@@ -42,35 +44,7 @@ public class LoginPage extends HttpServlet {
                 //session.setMaxInactiveInterval(60*30);//session timeout for 30 minutes
 
                 ApplicationExecution.setLoginAuditEntry(loginEmp,loginEmpRole);
-
                 response.sendRedirect("home-page");
-
-
-                /*String empLoggedInRole = ApplicationExecution.getEmployeeLoggedInRole(userName, password);
-                if(empLoggedInRole!=null){
-                    List<String> uiButtons = ApplicationExecution.getRoleUIButtons(empLoggedInRole);
-                    if(!uiButtons.isEmpty()){
-                        request.setAttribute("buttons",uiButtons);
-                    }
-                }
-                Employee emp = new Employee();
-                emp.setEmpUserName(userName);
-                String firstName = ApplicationExecution.getEmployeeFirstName(userName);
-                if(!firstName.isEmpty()){
-                    emp.setEmpFirstName(firstName);
-                }
-                EmployeeRole empRole = new EmployeeRole();
-                empRole.setRoles(new ArrayList<String>(Collections.singleton(empLoggedInRole)));
-                request.setAttribute("employee",emp);
-                request.setAttribute("employeeRole",empRole);
-
-                HttpSession session = request.getSession();
-                session.setAttribute("loggedEmployee", emp);
-                session.setAttribute("loggedEmployeeRole", empRole);
-
-                //ApplicationExecution.setLoginAuditEntry(emp,empRole);
-
-                request.getRequestDispatcher("/homepage.jsp").forward(request, response);*/
             }
             else{
                 request.setAttribute("success","False");

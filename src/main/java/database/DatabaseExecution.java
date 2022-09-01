@@ -173,6 +173,29 @@ public class DatabaseExecution {
         return emp;
     }
 
+    public static Employee getEmployeeLastName(String username){
+        Employee emp = new Employee();
+        try{
+            if(getDBConnection()){
+                String query = "select emp_last_name from employee where emp_user_name = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setString(1,username);
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        emp.setEmpLastName(result.getString(1));
+                    }
+                }
+                else{
+                    System.out.println("--no last name for the user returned");
+                }
+            }
+            conn.close();
+        }catch (Exception e){}
+        return emp;
+    }
+
     public static ArrayList<EmployeeRole> getAllEmpRolesDetails(){
         ArrayList<EmployeeRole> allEmpRolesDetails = new ArrayList<>();
         try{
@@ -424,7 +447,7 @@ public class DatabaseExecution {
                 if(result>0){
                     return true;
                 }
-            }
+            }conn.close();
         }catch (Exception e){}
         return false;
     }
@@ -444,7 +467,7 @@ public class DatabaseExecution {
                 if(result>0){
                    emp.setEmpId(getEmpIdFromDb(emp.getEmpUserName()).getEmpId());
                 }
-            }
+            }conn.close();
         }catch (Exception e){}
         return emp;
     }
@@ -461,7 +484,7 @@ public class DatabaseExecution {
                 stmnt.setInt(5,0);
                 int result = stmnt.executeUpdate();
                 if(result>0){ return true; }
-            }
+            }conn.close();
         }catch (Exception e){}
         return false;
     }
@@ -479,7 +502,7 @@ public class DatabaseExecution {
                     int id = result.getInt("audit_id");
                     loginAudit.setAuditId(id);
                 }
-            }
+            }conn.close();
         }catch (Exception e){}
         return loginAudit;
     }
@@ -496,7 +519,7 @@ public class DatabaseExecution {
                 if(result>0){
                     return true;
                 }
-            }
+            }conn.close();
         }catch (Exception e){}
         return false;
     }
@@ -526,7 +549,7 @@ public class DatabaseExecution {
                         emp.setEmpUserName(userName);
                     }
                 }
-            }
+            }conn.close();
         }catch (Exception e){}
         return emp;
     }
@@ -590,9 +613,207 @@ public class DatabaseExecution {
                         empDept.setDeptName(result.getString("dept_name"));
                     }
                 }
-            }
+            }conn.close();
         }catch(Exception e){}
         return empDept;
+    }
+
+    public static ArrayList<String> getAllArea(){
+        ArrayList<String> allArea = new ArrayList<>();
+        try{
+            if(getDBConnection()){
+                String query = "select * from area";
+                stmnt = conn.prepareStatement(query);
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        allArea.add(result.getString("area_name"));
+                    }
+                }
+            }
+            conn.close();
+        }catch(Exception e){}
+        return allArea;
+    }
+
+    public static int getAreaIdFromName(String area){
+        try{
+            if(getDBConnection()){
+                String query="select area_id from area where area_name = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setString(1,area);
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while (result.next()){
+                        int areaId = result.getInt(1);
+                        return areaId;
+                    }
+                }
+            }
+            conn.close();
+        }catch(Exception e){}
+        return 0;
+    }
+
+    public static boolean createRequest(Request req, Employee emp){
+        try{
+            if(getDBConnection()){
+                String query="INSERT into request VALUES (ABS(checksum(NEWID())),?,?,?,?);";
+                stmnt = conn.prepareStatement(query, new String[]{"req_id"});
+                stmnt.setInt(1,(int)emp.getEmpId());
+                stmnt.setTimestamp(2,req.getReqCreatedDate());
+                stmnt.setString(3,null);
+                stmnt.setInt(4,(int)req.getAreaRequested());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    return true;
+                }
+            }conn.close();
+        }catch(Exception e){}
+        return false;
+    }
+
+    public static Request getLatestRequest(){
+        Request req = new Request();
+        try{
+            if(getDBConnection()){
+                String query = "select top 1 * from request ORDER by req_created_date DESC";
+                stmnt = conn.prepareStatement(query);
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        req.setReqId(Long.valueOf(result.getInt("req_id")));
+                        req.setReqCreatedDate(result.getTimestamp("req_created_date"));
+                        req.setEmpId(Long.valueOf(result.getInt("emp_id")));
+                        req.setAreaRequested(Long.valueOf(result.getInt("area_requested")));
+                        req.setReqCompletedDate(result.getTimestamp("req_completed_date"));
+                    }
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return req;
+    }
+
+    public static boolean setRequestStatus(RequestStatus reqStat){
+        try{
+            if(getDBConnection()){
+                String query = "insert into request_status VALUES (?,?,?,?)";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,reqStat.getReqId());
+                stmnt.setLong(2,reqStat.getStatusId());
+                stmnt.setTimestamp(3,reqStat.getReqStatusStartTime());
+                stmnt.setLong(4, reqStat.getReqApproverId());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    return true;
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return false;
+    }
+
+    public static boolean modifyRequestStatus(RequestStatus reqStat){
+        try{
+            if(getDBConnection()){
+                String query = "UPDATE request_status set status_id = ? WHERE req_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,reqStat.getStatusId());
+                stmnt.setLong(2,reqStat.getReqId());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    return true;
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return false;
+    }
+
+    public static boolean modifyRequestCompletedDate(Request req){
+        try{
+            if(getDBConnection()){
+                String query = "UPDATE request set req_completed_date = ? WHERE req_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setTimestamp(1,req.getReqCompletedDate());
+                stmnt.setLong(2,req.getReqId());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    return true;
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return false;
+    }
+
+    public static long getAreaApproverId(Long areaRequested){
+        long approverId = 0;
+        try{
+            if(getDBConnection()){
+                String query ="select approver_id from area_approver where area_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,areaRequested);
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        approverId = result.getLong("approver_id");
+                    }
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return approverId;
+    }
+
+    public static ArrayList<Request> getAllRequests(long empId){
+        ArrayList<Request> allRequests = new ArrayList<>();
+        try{
+            if(getDBConnection()){
+                String query="select * from request where req_id in (select req_id from request_status where req_approver_id = ?)";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,empId);
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        Request req = new Request();
+                        req.setReqId(result.getLong("req_id"));
+                        req.setAreaRequested(result.getLong("area_requested"));
+                        req.setEmpId(result.getLong("emp_id"));
+                        req.setReqCreatedDate(result.getTimestamp("req_created_date"));
+                        allRequests.add(req);
+                    }
+                }
+            }conn.close();
+        }catch(Exception e){}
+        return allRequests;
+    }
+
+    public static RequestStatus getRequestStatus(Request req){
+        RequestStatus reqStatus = new RequestStatus();
+        try{
+            if(getDBConnection()){
+                String query = "select * from request_status where req_id = ?";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,req.getReqId());
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        reqStatus.setStatusId(result.getLong("status_id"));
+                        reqStatus.setReqId(result.getLong("req_id"));
+                        reqStatus.setReqStatusStartTime(result.getTimestamp("req_start_time"));
+                        reqStatus.setReqApproverId(result.getLong("approver_id"));
+                    }
+                }
+            }
+            conn.close();
+        }catch (Exception e){}
+        return reqStatus;
     }
 }
 

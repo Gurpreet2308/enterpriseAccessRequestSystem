@@ -68,6 +68,17 @@ public class ApplicationExecution {
         return firstName;
     }
 
+    public static String getEmployeeLastName(String username){
+        String lastName = "";
+        if(username!=null){
+            Employee emp = DatabaseExecution.getEmployeeLastName(username);
+            if(!emp.getEmpLastName().isEmpty()){
+                lastName = emp.getEmpLastName();
+            }
+        }
+        return lastName;
+    }
+
     public static ArrayList<EmployeeRole> getAllEmpRolesDetails (){
         ArrayList<EmployeeRole> allEmpRolesDetails = DatabaseExecution.getAllEmpRolesDetails();
         if(!allEmpRolesDetails.isEmpty() && allEmpRolesDetails!=null){
@@ -219,5 +230,76 @@ public class ApplicationExecution {
             empDept.setDeptName(DatabaseExecution.getDeptNameFromId(empDept).getDeptName());
             return empDept;
         } return null;
+    }
+
+    public static ArrayList<String> getAllArea(){
+        ArrayList<String> allArea = new ArrayList<String>(DatabaseExecution.getAllArea());
+        if(!allArea.isEmpty() && allArea!=null){
+            return allArea;
+        }
+        else{
+            System.out.println("-- no areas found in the application");
+        }return null;
+    }
+
+    public static Request createRequest(Request req, Employee emp){
+        if(req!=null & emp!=null){
+            emp.setEmpId(DatabaseExecution.getEmpIdFromDb(emp.getEmpUserName()).getEmpId());
+            req.setAreaRequested(Long.valueOf(DatabaseExecution.getAreaIdFromName(req.getAreaName())));
+            req.setReqCreatedDate(new Timestamp(System.currentTimeMillis()));
+            if(DatabaseExecution.createRequest(req,emp)){
+                Request latestReq = DatabaseExecution.getLatestRequest();
+                if(setRequestStatus(latestReq, "Pending")){
+                    req.setReqId(latestReq.getReqId());
+                }
+            }
+        }return req;
+    }
+
+    public static Request getLatestRequest(){
+        Request req = DatabaseExecution.getLatestRequest();
+        if(req!=null){
+            req.setAreaName(Area.getAreaName(req.getAreaRequested()));
+            return req;
+        }return null;
+    }
+
+    public static boolean setRequestStatus(Request req, String reqStatus){
+        if(req!=null){
+            RequestStatus reqStat = new RequestStatus();
+            reqStat.setReqId(req.getReqId());
+            reqStat.setReqStatusStartTime(req.getReqCreatedDate());
+            reqStat.setReqApproverId(DatabaseExecution.getAreaApproverId(req.getAreaRequested()));
+            reqStat.setStatusId(Status.getStatusId(reqStatus));
+            if(DatabaseExecution.setRequestStatus(reqStat)){
+                return true;
+            }
+        }return false;
+    }
+
+    public static boolean modifyRequestStatus(Request req, String reqStatus){
+        if(req!=null){
+            RequestStatus reqStat = new RequestStatus();
+            reqStat.setReqId(req.getReqId());
+            reqStat.setStatusId(Status.getStatusId(reqStatus));
+            if(DatabaseExecution.modifyRequestStatus(reqStat)){
+                req.setReqCompletedDate(new Timestamp(System.currentTimeMillis()));
+                if(DatabaseExecution.modifyRequestCompletedDate(req)){
+                    return true;
+                }
+            }
+        }return false;
+    }
+
+    public static ArrayList<Request> getAllRequests(Employee emp){
+        ArrayList<Request> allRequests = DatabaseExecution.getAllRequests(emp.getEmpId());
+        if(allRequests!=null){
+            for(Request req : allRequests){
+                req.setAreaName(Area.getAreaName(req.getAreaRequested()));
+                req.setEmpName(DatabaseExecution.getEmployeeFullNameFromEmpId((int)req.getEmpId()));
+                req.setStatus(Status.getStatus(DatabaseExecution.getRequestStatus(req).getStatusId()));
+            }
+        }else{System.out.println("no requests found for the approver");}
+        return allRequests;
     }
 }

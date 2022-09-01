@@ -53,6 +53,8 @@ public class HomePage extends HttpServlet {
                     case "Create Request":
                         response.sendRedirect("create-request");
                         break;
+                    case "Show Requests":
+                        response.sendRedirect("show-all-request");
                 }
             }
         }catch(Exception e){ }
