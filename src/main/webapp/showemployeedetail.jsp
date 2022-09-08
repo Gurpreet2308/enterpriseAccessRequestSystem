@@ -36,13 +36,36 @@
 <div align="center" style="margin-top: 40px; height: 97%; width: 100%">
     <h2>New Employee Created Successfully with Username : <%=emp.getEmpUserName()%></h2><br/>
     <div align="center" style="font-size: 17px">
-        <label>First Name : </label> <%=emp.getEmpFirstName()%> <br/><br/>
-        <label>Last Name :</label> <%=emp.getEmpLastName()%> <br/><br/>
-        <label>User Name :</label> <%=emp.getEmpUserName()%> <br/><br/>
-        <label>Department :</label> <%=empDept.getDeptName()%> <br/><br/>
-        <label>Role :</label> <%=empRole.getRoles().get(0)%> <br/><br/>
-        <label>Email Address :</label> <%=emp.getEmpEmailAddress()%> <br/><br/>
-        <label>Phone No :</label> <%=emp.getEmpPhoneNo()%>
+        <table style="width: 30%; height: 40%; font-size: 17px; padding-left: 50px">
+            <tr>
+                <td><label>First Name :</label></td>
+                <td><%=emp.getEmpFirstName()%></td>
+            </tr>
+            <tr>
+                <td><label>Last Name :</label>;</td>
+                <td><%=emp.getEmpLastName()%></td>
+            </tr>
+            <tr>
+                <td><label>User Name :</label></td>
+                <td><%=emp.getEmpUserName()%></td>
+            </tr>
+            <tr>
+                <td><label>Department :</label></td>
+                <td><%=empDept.getDeptName()%></td>
+            </tr>
+            <tr>
+                <td><label>Role :</label></td>
+                <td><%=empRole.getRoles().get(0)%></td>
+            </tr>
+            <tr>
+                <td><label>Email Address :</label></td>
+                <td><%=emp.getEmpEmailAddress()%></td>
+            </tr>
+            <tr>
+                <td><label>Phone No :</label></td>
+                <td><%=emp.getEmpPhoneNo()%></td>
+            </tr>
+        </table>
     </div>
 </div>
 </body>

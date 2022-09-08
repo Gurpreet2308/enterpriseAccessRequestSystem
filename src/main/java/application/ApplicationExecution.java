@@ -285,6 +285,9 @@ public class ApplicationExecution {
             if(DatabaseExecution.modifyRequestStatus(reqStat)){
                 req.setReqCompletedDate(new Timestamp(System.currentTimeMillis()));
                 if(DatabaseExecution.modifyRequestCompletedDate(req)){
+                    if(reqStatus.equals("Accepted")){
+                        addAreaToEmployee(req);
+                    }
                     return true;
                 }
             }
@@ -301,5 +304,43 @@ public class ApplicationExecution {
             }
         }else{System.out.println("no requests found for the approver");}
         return allRequests;
+    }
+
+    private static void addAreaToEmployee(Request req){
+        if(req!=null){
+            EmployeeArea empArea = new EmployeeArea();
+            empArea.setAreaId(req.getAreaRequested());
+            empArea.setEmpId(req.getEmpId());
+            empArea.setAreaStartDate(new Timestamp(System.currentTimeMillis()));
+            empArea.setAreaEndDate(null);
+            DatabaseExecution.addAreaToEmployee(empArea);
+        }
+    }
+
+    public static boolean checkAreaForEmployee(Request req, Employee emp){
+        if(req!=null && emp!=null){
+            EmployeeArea empArea = new EmployeeArea();
+            empArea.setAreaId(req.getAreaRequested());
+            empArea.setEmpId(emp.getEmpId());
+            if(DatabaseExecution.checkAreaForEmployee(empArea)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<Area> getEmployeeAreas (Employee emp){
+        if(emp!=null){
+            ArrayList<Area> empAreas = DatabaseExecution.getEmployeeAreas(emp);
+            if(empAreas!=null){
+                for(Area area: empAreas){
+                    area.setAreaName(Area.getAreaName(area.getAreaId()));
+                }
+                return empAreas;
+            }
+            else{
+                System.out.println("Employee doesnt have access to any areas.");
+            }
+        }return null;
     }
 }

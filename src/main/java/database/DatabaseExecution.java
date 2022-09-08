@@ -200,7 +200,7 @@ public class DatabaseExecution {
         ArrayList<EmployeeRole> allEmpRolesDetails = new ArrayList<>();
         try{
             if(getDBConnection()){
-                String query = "select * from employee_role";
+                String query = "select * from employee_role order by role_id";
                 stmnt = conn.prepareStatement(query);
                 ResultSet result = stmnt.executeQuery();
                 if(result!=null){
@@ -310,7 +310,7 @@ public class DatabaseExecution {
                 stmnt.setString(1,null);
             }
             else{
-                stmnt.setDate(1,new Date(empRole.getRoleEndDate().getTime()));//stmnt.setDate(1,new Date(endDate.getTime()));
+                stmnt.setTimestamp(1,empRole.getRoleEndDate());//stmnt.setDate(1,new Date(endDate.getTime()));
             }
             stmnt.setInt(2,(int)empRole.getEmpId());//stmnt.setInt(2,emp_id);
             stmnt.setInt(3,(int)empRole.getRoleId());//stmnt.setInt(3,role_id);
@@ -537,8 +537,8 @@ public class DatabaseExecution {
                         String name = result.getString("emp_first_name");
                         String lname = result.getString("emp_last_name");
                         String userName = result.getString("emp_user_name");
-                        String email = result.getString("emp_phone_no");
-                        String phoneNo = result.getString("emp_email_address");
+                        String phoneNo = result.getString("emp_phone_no");
+                        String email = result.getString("emp_email_address");
                         long id = Long.valueOf(result.getInt("emp_id"));
 
                         emp.setEmpId(id);
@@ -773,7 +773,7 @@ public class DatabaseExecution {
         ArrayList<Request> allRequests = new ArrayList<>();
         try{
             if(getDBConnection()){
-                String query="select * from request where req_id in (select req_id from request_status where req_approver_id = ?)";
+                String query="select * from request where req_id in (select req_id from request_status where req_approver_id = ?) ORDER by req_created_date DESC";
                 stmnt = conn.prepareStatement(query);
                 stmnt.setLong(1,empId);
 
@@ -814,6 +814,66 @@ public class DatabaseExecution {
             conn.close();
         }catch (Exception e){}
         return reqStatus;
+    }
+    public static boolean addAreaToEmployee(EmployeeArea empArea){
+        try{
+            if(getDBConnection()){
+                String query = "INSERT into employee_area VALUES (?,?,?,?)";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,empArea.getAreaId());
+                stmnt.setLong(2,empArea.getEmpId());
+                stmnt.setTimestamp(3,empArea.getAreaStartDate());
+                stmnt.setTimestamp(4, empArea.getAreaEndDate());
+
+                int result = stmnt.executeUpdate();
+                if(result>0){
+                    conn.close();
+                    return true;
+                }
+            }conn.close();
+        }catch(Exception e){}
+        return false;
+    }
+
+    public static boolean checkAreaForEmployee(EmployeeArea empArea){
+        try{
+            if(getDBConnection()){
+                String query = "select * from employee_area where area_id= ? AND emp_id= ? and area_end_date is NULL;";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,empArea.getAreaId());
+                stmnt.setLong(2,empArea.getAreaId());
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        conn.close();
+                        return true;
+                    }
+                }
+            }conn.close();
+        }catch (Exception e){}
+        return false;
+    }
+
+    public static ArrayList<Area> getEmployeeAreas(Employee emp){
+        ArrayList<Area> empAreas = new ArrayList<>();
+        try{
+            if(getDBConnection()){
+                String query = "select area_id from employee_area where emp_id = ? and area_end_date is NUll";
+                stmnt = conn.prepareStatement(query);
+                stmnt.setLong(1,emp.getEmpId());
+
+                ResultSet result = stmnt.executeQuery();
+                if(result!=null){
+                    while(result.next()){
+                        Area area = new Area();
+                        area.setAreaId(result.getLong("area_id"));
+                        empAreas.add(area);
+                    }
+                }
+            }
+        }catch (Exception e){}
+        return empAreas;
     }
 }
 

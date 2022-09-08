@@ -15,6 +15,8 @@ public class RequestAction extends HttpServlet {
         try{
             Request req = new Request();
             req.setReqId(Long.valueOf(request.getParameter("reqId")));
+            req.setEmpId(Long.valueOf(request.getParameter("empId")));
+            req.setAreaRequested(Long.valueOf(request.getParameter("areaRequested")));
             String action = request.getParameter("buttonClicked");
             switch (action){
                 case "Accept":

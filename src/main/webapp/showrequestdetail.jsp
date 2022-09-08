@@ -26,11 +26,28 @@
 <div align="center" style="margin-top: 40px; height: 97%; width: 100%">
     <h2>New Request Created Successfully with Request Id : <%=req.getReqId()%></h2><br/>
     <div align="center" style="font-size: 17px">
-        <label>Request Id : </label> <%=req.getReqId()%> <br/><br/>
-        <label>Created By :</label> <%=emp.getEmpFirstName()%> <%=emp.getEmpLastName()%><br/><br/>
-        <label>Date Created :</label> <%=req.getReqCreatedDate()%> <br/><br/>
-        <label>Area Requested :</label> <%=req.getAreaName()%> <br/><br/>
-        <label>Status :</label> In Process <br/><br/>
+        <table style="width: 30%; height: 40%; font-size: 17px; padding-left: 50px">
+            <tr>
+                <td><label>Request Id : </label> </td>
+                <td><%=req.getReqId()%></td>
+            </tr>
+            <tr>
+                <td><label>Created By :</label></td>
+                <td><%=emp.getEmpFirstName()%> <%=emp.getEmpLastName()%></td>
+            </tr>
+            <tr>
+                <td><label>Date Created :</label> </td>
+                <td><%=req.getReqCreatedDate()%></td>
+            </tr>
+            <tr>
+                <td><label>Area Requested :</label> </td>
+                <td><%=req.getAreaName()%></td>
+            </tr>
+            <tr>
+                <td><label>Status :</label></td>
+                <td>In Process</td>
+            </tr>
+        </table>
     </div>
 </div>
 </body>

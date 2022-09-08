@@ -55,6 +55,8 @@ public class HomePage extends HttpServlet {
                         break;
                     case "Show Requests":
                         response.sendRedirect("show-all-request");
+                    case "My Areas":
+                        response.sendRedirect("my-area");
                 }
             }
         }catch(Exception e){ }
