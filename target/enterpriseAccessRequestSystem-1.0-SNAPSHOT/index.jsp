@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello World</title>
+    <title>Enterprise Access Request System</title>
 </head>
 <body>
 <h1 align="center"><%= "Welcome to the Enterprise Access Request System" %>

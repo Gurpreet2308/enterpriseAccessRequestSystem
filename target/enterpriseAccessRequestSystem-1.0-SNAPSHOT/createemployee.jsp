@@ -23,26 +23,40 @@
     <h2>Create New Employee</h2>
     <h3>Fill details below</h3><br/>
     <form action="create-employee" method="post">
-        <label id="fname">First Name</label>&emsp;
-        <input type="text" name="fname" placeholder="First Name" required> <br/> <br/>
-        <label id="lname">Last Name</label>&emsp;
-        <input type="text" name="lname" placeholder="Last Name" required> <br/> <br/>
-        <label id="email">Email Address</label>&emsp;
-        <input type="text" name="email" placeholder="Email Address" required> <br/> <br/>
-        <label id="phoneno">Phone Number</label>&emsp;
-        <input type="text" name="phoneno" placeholder="Phone Number" required> <br/> <br/>
-        <label for="role">Role</label>&emsp;
-        <select id="role" name="role">
-            <c:forEach begin="0" end="${allRole.size()-1}" var="i">
-                <option>${allRole.get(i)}</option>
-            </c:forEach>
-        </select><br/><br/>
-        <label for="dept">Department</label>&emsp;
-        <select id="dept" name="dept">
-            <c:forEach begin="0" end="${allDept.size()-1}" var="i">
-                <option>${allDept.get(i)}</option>
-            </c:forEach>
-        </select><br/><br/><br/><br/>
+        <table style="width: 25%; height: 40%; font-size: 16px; padding-left: 50px">
+            <tr>
+                <td><label id="fname">First Name</label></td>
+                <td><input type="text" name="fname" placeholder="First Name" required></td>
+            </tr>
+            <tr>
+                <td><label id="lname">Last Name</label></td>
+                <td><input type="text" name="lname" placeholder="Last Name" required> <br/> </td>
+            </tr>
+            <tr>
+                <td><label id="email">Email Address</label></td>
+                <td><input type="text" name="email" placeholder="Email Address" required></td>
+            </tr>
+            <tr>
+                <td><label id="phoneno">Phone Number</label></td>
+                <td><input type="text" name="phoneno" placeholder="Phone Number" required></td>
+            </tr>
+            <tr>
+                <td><label for="role">Role</label></td>
+                <td><select id="role" name="role">
+                    <c:forEach begin="0" end="${allRole.size()-1}" var="i">
+                        <option>${allRole.get(i)}</option>
+                    </c:forEach>
+                </select></td>
+            </tr>
+            <tr>
+                <td><label for="dept">Department</label></td>
+                <td><select id="dept" name="dept">
+                    <c:forEach begin="0" end="${allDept.size()-1}" var="i">
+                        <option>${allDept.get(i)}</option>
+                    </c:forEach>
+                </select</td>
+            </tr>
+        </table><br/><br/><br/><br/>
         <input type="submit" value="Create" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px">
     </form>
 </div>

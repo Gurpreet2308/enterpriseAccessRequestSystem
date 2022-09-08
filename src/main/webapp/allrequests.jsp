@@ -82,8 +82,8 @@
             <tr>
                 <form action="request-action" method="get">
                     <td><%=allRequests.get(i).getReqId()%></td> <input type="hidden" name="reqId" value="<%=allRequests.get(i).getReqId()%>">
-                    <td><%=allRequests.get(i).getAreaName()%></td> <input type="hidden" name="areaName" value="<%=allRequests.get(i).getAreaName()%>">
-                    <td><%=allRequests.get(i).getEmpName()%></td> <input type="hidden" name="empName" value="<%=allRequests.get(i).getEmpName()%>">
+                    <td><%=allRequests.get(i).getAreaName()%></td> <input type="hidden" name="areaRequested" value="<%=allRequests.get(i).getAreaRequested()%>">
+                    <td><%=allRequests.get(i).getEmpName()%></td> <input type="hidden" name="empId" value="<%=allRequests.get(i).getEmpId()%>">
                     <td><%=allRequests.get(i).getReqCreatedDate()%></td> <input type="hidden" name="reqCreatedDate" value="<%=allRequests.get(i).getReqCreatedDate()%>">
                     <td><%=allRequests.get(i).getStatus()%></td> <input type="hidden" name="reqStatus" value="<%=allRequests.get(i).getStatus()%>">
                     <%
